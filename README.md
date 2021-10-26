@@ -1,2 +1,2 @@
 # code
-Byte-sized C++ snippets, algorithms, data structures
+Byte-sized C++ snippets, algorithms, and data structures
