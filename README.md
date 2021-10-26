@@ -1,2 +1,2 @@
 # code
-Byte-sized C++ snippets. Experiments on data structures and algorithms
+Byte-sized C++ snippets, algorithms, data structures
