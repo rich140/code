@@ -1,0 +1,8 @@
+Vector Sum:
+    #include <numeric>
+    accumulate(<vector>.begin(), <vector>.end(), 0);
+
+Print Vector Elements:
+    #include <algorithm> // for copy
+    #include <iterator> // for ostream_iterator
+    copy(<vec>.begin(), <vec>.end(), ostream_iterator<T>(cout, " "));
