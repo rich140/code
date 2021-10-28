@@ -17,10 +17,15 @@ bool isPrime(long n) {
 
 // Finds all prime factors for a number n
 void find_prime_factors(long n, vector<int>& factors) {
-    for (int i = 2; i <= n/2+1; i++) {
-        if (n % i == 0 && isPrime(i)) {
-            factors.push_back(i);
-            n = n / i;
+    while (n != 1) {
+        long i = 2;
+        while (true) {
+            if (n % i == 0 && isPrime(i)) {
+                factors.push_back(i);
+                n = n / i;
+                break;
+            }   
+            i++; 
         }
     }
 } 
@@ -28,6 +33,7 @@ void find_prime_factors(long n, vector<int>& factors) {
 int main() {
     clock_t time = clock();
     vector<int> res;
+    find_prime_factors(600851475143, res);
     find_prime_factors(13195, res);
     for (int i = 0; i < res.size(); i++) {
         cout << res[i] << endl;
