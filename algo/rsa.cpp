@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 
 using namespace std;
 
@@ -6,8 +7,8 @@ using namespace std;
 // (1) Sender encrypts data using recipient's public key
 // (2) Recipient decrypts cipher text using their private key
 
-// Returns a tuple in the form (gcd, s, t) where s and t are bezout's coefficients
-tuple<int,int,int> extended_gcd(int a, int b) {
+// Returns a tuple (gcd, s, t) where s and t are bezout's coefficients
+tuple<int,int,int> extended_euclidean(int a, int b) {
     int s = 0;
     int old_s = 1;
     int r = b;
@@ -34,31 +35,31 @@ tuple<int,int,int> extended_gcd(int a, int b) {
     return make_tuple(old_r, old_s, bezout_t);
 }
 
-tuple<int,int,int> gcd(int a, int b) {
-    int x = 1;
-    int y = 0;
-    int x1 = 0, y1 = 1, a1 = a, b1 = b;
-    while (b1) {
-        int q = a1 / b1;
-        tie(x, x1) = make_tuple(x1, x - q * x1);
-        tie(y, y1) = make_tuple(y1, y - q * y1);
-        tie(a1, b1) = make_tuple(b1, a1 - q * b1);
-    }
-    return tie (a1,a,b);
+int encrypt(int m, pair<int,int> public_key) {
+    return (int)pow(m,public_key.first) % public_key.second;
+}
+
+int getDecryptionKey(int e, int tot_n) {
+    return get<1>(extended_euclidean(e,tot_n));
+}
+
+int decrypt(int c, pair<int,int> private_key) {
+    return (int)pow(c,private_key.first) % private_key.second;
 }
 
 int main() {
     // RSA Example
-    int x = 11;
-    int y = 13;
-    int n = x*y; // 141
-    int phi_n = (x-1)*(y-1); // 120
-    int e = 7; // coprime to 120
-    pair<int,int> public_key = make_pair(n,e);
-    
-    tuple<int,int,int> t = gcd(11,13);
-    tuple<int,int,int> u = gcd(240,46);
-    cout << get<0>(t) << ", " << get<1>(t) << ", " << get<2>(t) << endl;
-    cout << get<0>(u) << ", " << get<1>(u) << ", " << get<2>(u) << endl;
+    int p = 3;
+    int q = 11;
+    int n = p*q;
+    int tot_n = (p-1)*(q-1); // totient of n
+    int e = 7; // coprime to n 
+    int d = getDecryptionKey(e, tot_n);
+    pair<int,int> public_key = make_pair(e,n);
+    pair<int,int> private_key = make_pair(d,n); 
+    int m = 2; // original message
+    int c = encrypt(m, public_key); // encrypted ciphertext
+    cout << "Encrypted Message: " << to_string(c) << endl;
+    cout << "Decrypted Message: " << decrypt(c, private_key) << endl;
     return 0;
 }
